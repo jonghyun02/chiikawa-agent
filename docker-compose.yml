@@ -1,0 +1,73 @@
+# 먼작귀 에이전트 — 4개 컨테이너 (Day5 HR 에이전트와 같은 구조)
+#   docker compose up -d --build      → 화면 http://localhost:8501 · API 문서 http://localhost:8000/docs
+#   docker compose down               (시청 목록·대화 기록·색인은 볼륨에 남는다. 지우려면 down -v)
+# .env 의 ANTHROPIC_API_KEY 가 필요하다.
+
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.19.0             # qdrant-client 1.19.x 와 맞춘 버전 (latest 금지 — 버전 고정)
+    volumes:
+      - qdrant_storage:/qdrant/storage
+    healthcheck:                             # 이미지에 curl 이 없어 bash /dev/tcp 로 포트만 확인 (Day5)
+      test: ["CMD-SHELL", "bash -c ':> /dev/tcp/127.0.0.1/6333' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  mcp-server:
+    build: .
+    image: chiikawa-agent:latest
+    command: ["python", "mcp_server.py"]
+    environment:
+      MCP_TRANSPORT: http
+      MCP_SERVER_HOST: 0.0.0.0                 # 다른 컨테이너가 접속할 수 있게
+      MCP_SERVER_PORT: "8001"
+      WATCHLIST_DB: /data/watchlist.sqlite     # 시청 목록은 볼륨에 (재시작해도 남는다)
+    volumes:
+      - mcp_data:/data
+    expose:
+      - "8001"                                 # ports 가 아니라 expose — compose 내부 전용 (Day5 MCP 이슈 2)
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('localhost', 8001), 2)"]
+      interval: 5s
+      timeout: 3s
+      start_period: 10s
+      retries: 10
+    restart: unless-stopped
+
+  agent-app:
+    build: .
+    image: chiikawa-agent:latest
+    env_file: .env                             # ANTHROPIC_API_KEY (이미지에는 넣지 않는다)
+    environment:
+      QDRANT_HOST: qdrant                      # 서비스 이름 = 주소
+      MCP_SERVER_URL: http://mcp-server:8001/mcp
+      CHECKPOINT_DB: /data/ckpt.sqlite         # 대화 기억·승인 대기 상태를 볼륨에
+    volumes:
+      - agent_data:/data
+    ports:
+      - "${AGENT_PORT:-8000}:8000"             # 개발 중 curl·/docs 용. 시연 때는 닫아도 된다
+    depends_on:
+      qdrant:
+        condition: service_healthy
+      mcp-server:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    image: chiikawa-frontend:latest
+    environment:
+      API_URL: http://agent-app:8000
+    ports:
+      - "${FRONTEND_PORT:-8501}:8501"
+    depends_on:
+      agent-app:
+        condition: service_healthy             # agent-app 의 /health 가 통과한 뒤 시작
+    restart: unless-stopped
+
+volumes:
+  qdrant_storage:
+  mcp_data:
+  agent_data:

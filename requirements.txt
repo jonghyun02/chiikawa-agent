@@ -1,0 +1,15 @@
+# 실행용 의존성 — 수업 langgraph_addon 과 같은 고정 버전 (Python 3.14 검증본)
+# langgraph 의 "v2" 는 2.x 패키지가 아니라 1.2.x 의 version="v2" 호출 형식이다.
+langgraph==1.2.16
+langchain==1.4.6
+langchain-core==1.6.12
+langchain-anthropic==1.7.6
+langchain-mcp-adapters==0.3.2
+fastmcp==3.4.9
+qdrant-client==1.19.1
+fastembed==0.9.0
+fastapi==0.146.0
+uvicorn==0.54.0
+langgraph-checkpoint-sqlite==3.1.2
+aiosqlite==0.22.1
+python-dotenv==1.2.4

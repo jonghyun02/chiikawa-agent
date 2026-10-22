@@ -1,0 +1,28 @@
+# 먼작귀 에이전트 화면 테마 — 크림 바탕 · 분홍 포인트 · 가르마 머리색 사이드바 · 둥근 손글씨 느낌 글꼴
+# app.py 옆 .streamlit 이라 `streamlit run frontend/app.py`(로컬)와 Docker(/app) 둘 다 이 파일을 읽는다.
+
+[theme]
+base = "light"
+primaryColor = "#B8486F"              # 분홍 (흰 버튼 글자와 대비 5:1)
+backgroundColor = "#FFFAF3"           # 크림
+secondaryBackgroundColor = "#FCEEF2"  # 연분홍 (입력칸·말풍선 바탕)
+textColor = "#4B3B35"                 # 따뜻한 진갈색
+borderColor = "#F0D6DE"
+linkColor = "#2F65A0"                 # 가르마 머리색을 진하게
+font = "'Gowun Dodum':https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap"
+headingFont = "Jua:https://fonts.googleapis.com/css2?family=Jua&display=swap"
+headingFontWeights = [400, 400, 400, 400, 400, 400]
+baseRadius = "large"
+buttonRadius = "full"
+showWidgetBorder = true
+showSidebarBorder = false
+linkUnderline = false
+
+[theme.sidebar]
+backgroundColor = "#EAF2FB"
+secondaryBackgroundColor = "#FFFFFF"
+codeBackgroundColor = "#FFFFFF"
+textColor = "#33404F"
+borderColor = "#CADCF0"
+primaryColor = "#2F65A0"
+linkColor = "#2F65A0"

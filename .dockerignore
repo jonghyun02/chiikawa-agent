@@ -1,0 +1,15 @@
+# 이미지에 넣지 않을 것 — 비밀(.env), 로컬 환경, 원본 수집 파일, 실행 산출물
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+qdrant_data/
+data/raw/
+data/watchlist*.sqlite
+*.sqlite
+frontend/
+scripts/
+test_offline.py
+test_frontend.py

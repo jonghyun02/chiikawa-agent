@@ -1,0 +1,19 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+qdrant_data/
+data/watchlist*.sqlite
+*.sqlite
+
+# 작업 도구 상태
+.omc/
+.claude/
+
+# 저작권 자료·실행 산출물은 올리지 않는다 (data/README.md 참고)
+data/*
+!data/README.md
+!data/eval_scene_queries.json
+frontend/img/
+docs/

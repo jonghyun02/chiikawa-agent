@@ -1,0 +1,8 @@
+# 로컬 개발·테스트용. 실행용 의존성 + 테스트 도구 + 데이터 수집 + 화면
+-r requirements.txt
+pytest==9.1.1
+httpx==0.28.1
+yt-dlp
+streamlit
+requests
+openvino==2026.4.1   # scripts/build_vectors.py: 문서 벡터를 Intel GPU·NPU 로 미리 계산
